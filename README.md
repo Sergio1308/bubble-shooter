@@ -29,3 +29,10 @@ using the keyboard, the player can control an object on the playing field. Using
 
 ### Shooting mechanics 
 there is experience that can drop from destroyed opponents with a small chance. When the player picks up this experience, it changes the shooting mechanics and thereby helps the player to kill more enemies. As soon as the player collects the required amount of experience, a new type of shooting will open to him. With each new wave passed, there will be more and more opponents, so the player needs such a mechanic.
+
+# Project structure
+"src" folder contains all java classes for game functionality.
+The launch of the game is implemented in the "GameStart.java" class.
+The main mechanics and properties of the game are implemented in the "GamePanel.java" class.
+
+"image" folder contains bitmaps for the background of the game windows.
