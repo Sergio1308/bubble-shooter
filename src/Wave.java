@@ -1,6 +1,7 @@
 import java.awt.*;
 
 public class Wave {
+    
     // Fields
     private int waveNumber;
     private int waveMultiplier;
@@ -36,6 +37,7 @@ public class Wave {
                 GamePanel.enemies.add(new Enemy(1, 1));
             }
         }
+        
         if (waveNumber == 2) {
             for (int i = 0; i < 4; i++) {
                 GamePanel.enemies.add(new Enemy(1, 1));
@@ -44,12 +46,14 @@ public class Wave {
             GamePanel.enemies.add(new Enemy(2, 1));
             GamePanel.enemies.add(new Enemy(1,1));
         }
+        
         if (waveNumber == 3) {
             GamePanel.enemies.add(new Enemy(2, 3));
             GamePanel.enemies.add(new Enemy(2, 3));
             GamePanel.enemies.add(new Enemy(2, 4));
             GamePanel.enemies.add(new Enemy(1,1));
         }
+        
         if (waveNumber > 3) {
             for (int i = 0; i < 10; i++) {
                 GamePanel.enemies.add(new Enemy(2, 4));
@@ -58,29 +62,12 @@ public class Wave {
                 GamePanel.enemies.add(new Enemy(3,1));
             }
         }
+        
         if (waveNumber == 10) {
             for (int i = 0; i < 2; i++) {
                 GamePanel.enemies.add(new Enemy(1, 1));
             }
         }
-//        int enemyCount = waveNumber * waveMultiplier;
-//        if (waveNumber < 4) {
-//            while (enemyCount > 0) {
-//                int type = 1;
-//                int rank = 1;
-//                GamePanel.enemies.add(new Enemy(type, rank));
-//                enemyCount -= type * rank;
-//            }
-//        }
-//        if (waveNumber > 4) {
-//            while (enemyCount > 0) {
-//                int type = 1;
-//                int rank = 3;
-//                GamePanel.enemies.add(new Enemy(type, rank));
-//                enemyCount -= type * rank;
-//            }
-//        }
-//        waveNumber++;
     }
 
     public void update() {
@@ -89,13 +76,16 @@ public class Wave {
             waveNumber++;
             waveStart = false;
         }
+        
         if (waveStart && GamePanel.enemies.size() == 0) {
             createEnemies();
         }
+        
         if (waveTimer > 0) {
             waveTimerDiff += (System.nanoTime() - waveTimer) / 1000000;
             waveTimer = System.nanoTime();
         }
+        
         if (waveTimerDiff > waveDelay) {
             createEnemies();
             waveTimer = 0;
