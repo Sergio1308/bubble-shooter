@@ -21,7 +21,7 @@ the game screen contains the player and opponents who move from top to bottom to
 
 In addition, such ranks of enemies have been implemented, which, when killed by the player, are divided into smaller enemies.
 
-### Loss conditions 
+### Conditions to end the game
 the player has only three lives. When a player collides with an enemy object, he will lose one or more lives (depends on the rank of the enemy). With the loss of all lives, the game ends.
 
 ### Control mechanics 
