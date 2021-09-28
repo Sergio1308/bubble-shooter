@@ -1,12 +1,13 @@
 import java.awt.*;
 
 public class Player {
+    
     // Fields
     private double x;
     private double y;
     private int r;
 
-    private double dx; // move coefficient
+    private double dx;  // bias coefficient
     private double dy;
 
     private int speed;
@@ -70,7 +71,7 @@ public class Player {
         score = 0;
     }
 
-    //Functions
+    // getter functions
     public double getX(){
         return x;
     }
@@ -84,9 +85,12 @@ public class Player {
     }
 
     public int getScore() { return score; }
-
     public int getHealth() { return health; }
-
+    public int getPowerLevel() { return powerLevel; }
+    public int getPower() { return power; }
+    public int getRequiredPower() { return requiredPower[powerLevel]; }
+    
+    // Functions
     public void gainLife() {
         health++;
     }
@@ -98,6 +102,7 @@ public class Player {
             GamePanel.state = GamePanel.STATES.GAMEOVER;
         }
     }
+    
     public void addScore(int i) { score += i; }
 
     public void increasePower(int i) {
@@ -107,11 +112,6 @@ public class Player {
             powerLevel++;
         }
     }
-
-    public int getPowerLevel() { return powerLevel; }
-    public int getPower() { return power; }
-    public int getRequiredPower() { return requiredPower[powerLevel]; }
-
 
     public void update() {
         if (up && y > r) {
@@ -134,11 +134,11 @@ public class Player {
         y += dy;
         x += dx;
 
-        dy = 0; // stop moving
+        dy = 0;  // stop moving
 
         dx = 0;
 
-        // firing
+        // Shooting
         if (isFiring) {
             long elapsed = (System.nanoTime() - firingTimer) / 1000000;
             if (elapsed > firingDelay) {
@@ -174,11 +174,12 @@ public class Player {
     public void draw(Graphics2D g) {
         g.setColor(color1);
         g.fillOval((int) (x - r), (int) (y - r), 2 * r, 2 * r);
-        g.setStroke(new BasicStroke(3)); // line thickness
+        g.setStroke(new BasicStroke(3));  // line thickness
         g.setColor(color1.darker());
         g.drawOval((int) (x - r), (int) (y - r), 2 * r, 2 * r);
-        g.setStroke(new BasicStroke(1)); // line thickness
+        g.setStroke(new BasicStroke(1));  // line thickness
     }
+    
     public void drawHealth(Graphics2D g) {
         for (int i = 0; i < GamePanel.player.getHealth(); i++) {
             g.setColor(color1);
