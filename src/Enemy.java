@@ -1,13 +1,14 @@
 import java.awt.*;
 
 public class Enemy {
+    
     // Fields
     private double x;
     private double y;
     private int r;
 
     private double speed;
-    private double dx; // shift
+    private double dx;  // bias
     private double dy;
     private double rad;
 
@@ -26,7 +27,7 @@ public class Enemy {
         this.type = type;
         this.rank = rank;
 
-        // default enemy
+        // Default enemy properties
         if (type == 1) {
             color = Color.GREEN;
             if (rank == 1) {
@@ -35,7 +36,8 @@ public class Enemy {
                 health = 1;
             }
         }
-        // stronger, faster default
+        
+        // Stronger, faster + default properties
         if (type == 2) {
             color = Color.RED;
             if (rank == 1) {
@@ -43,23 +45,27 @@ public class Enemy {
                 r = 7;
                 health = 2;
             }
+            
             if (rank == 2) {
                 speed = 2;
                 r = 12;
                 health = 2;
             }
+            
             if (rank == 3) {
                 speed = 1.5;
                 r = 22;
                 health = 3;
             }
+            
             if (rank == 4) {
                 speed = 1.5;
                 r = 32;
                 health = 4;
             }
         }
-        // slow, but hard to kill
+        
+        // Slow, but hard to kill
         if (type == 3) {
             color = Color.YELLOW;
             if (rank == 1) {
@@ -72,39 +78,10 @@ public class Enemy {
         x = Math.random() * GamePanel.WIDTH;
         y = 0;
         double angle = Math.toRadians(Math.random() * 360);
-        //dx = Math.sin(angle) * speed;
         dy = Math.cos(angle) * speed;
         dx = Math.sin(angle) * speed;
 
         ready = false;
-
-//        switch(type) {
-//            case(1): color = Color.GREEN;
-//                switch(rank) {
-//                    case(1):
-//                        x = Math.random() * GamePanel.WIDTH;
-//                        y = 0;
-//                        r = 7;
-//                        speed = 2;
-//                        health = 1;
-//                        double angle = Math.toRadians(Math.random() * 360);
-//                        dx = Math.sin(angle) * speed;
-//                        dy = Math.cos(angle) * speed;
-//                    case(2):
-//                        r = 12;
-//                        speed = 2;
-//                        health = 2;
-//                    case(3):
-//                        speed = 1.5;
-//                        r = 20;
-//                        health = 3;
-//                    case(4):
-//                        speed = 1.5;
-//                        r = 30;
-//                        health = 4;
-                //}
-            //case(2): color = Color.RED;
-        //}
     }
 
     // Functions
@@ -144,7 +121,6 @@ public class Enemy {
                 e.rad = Math.toRadians(angle);
 
                 GamePanel.enemies.add(e);
-
             }
         }
     }
