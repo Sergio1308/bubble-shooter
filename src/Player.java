@@ -1,13 +1,12 @@
 import java.awt.*;
 
 public class Player {
-    
-    // Fields
+
     private double x;
     private double y;
     private int r;
 
-    private double dx;  // bias coefficient
+    private double dx;
     private double dy;
 
     private int speed;
@@ -41,15 +40,13 @@ public class Player {
 
     private int score;
 
-
-    // Constructor
     public Player () {
-        x = GamePanel.WIDTH / 2;
-        y = GamePanel.HEIGHT / 2;
+        x = (double) GamePanel.WIDTH / 2;
+        y = 500;
 
-        r = 5;
+        r = 8;
 
-        speed = 5;
+        speed = 10;
 
         dx = 0;
         dy = 0;
@@ -71,7 +68,6 @@ public class Player {
         score = 0;
     }
 
-    // getter functions
     public double getX(){
         return x;
     }
@@ -85,33 +81,36 @@ public class Player {
     }
 
     public int getScore() { return score; }
+
     public int getHealth() { return health; }
-    public int getPowerLevel() { return powerLevel; }
-    public int getPower() { return power; }
-    public int getRequiredPower() { return requiredPower[powerLevel]; }
-    
-    // Functions
+
     public void gainLife() {
         health++;
     }
 
     public void hit() {
         health--;
-        healthy = true;
         if (health <= 0) {
+            healthy = true;
             GamePanel.state = GamePanel.STATES.GAMEOVER;
         }
     }
-    
     public void addScore(int i) { score += i; }
 
     public void increasePower(int i) {
-        power += i;
-        if (power >= requiredPower[powerLevel]) {
-            power -= requiredPower[powerLevel];
-            powerLevel++;
+        if (power + i < requiredPower.length) {
+            power += i;
+            if (power >= requiredPower[powerLevel]) {
+                power -= requiredPower[powerLevel];
+                powerLevel++;
+            }
         }
     }
+
+    public int getPowerLevel() { return powerLevel; }
+    public int getPower() { return power; }
+    public int getRequiredPower() { return requiredPower[powerLevel]; }
+
 
     public void update() {
         if (up && y > r) {
@@ -134,38 +133,38 @@ public class Player {
         y += dy;
         x += dx;
 
-        dy = 0;  // stop moving
+        dy = 0; // stop moving
 
         dx = 0;
 
-        // Shooting
+        // firing
         if (isFiring) {
             long elapsed = (System.nanoTime() - firingTimer) / 1000000;
             if (elapsed > firingDelay) {
-                firingTimer = System.nanoTime(); // ?
-                if (powerLevel < 2) {
+                firingTimer = System.nanoTime();
+                // extra option
+                if(isShotgun) {
+                    currentAngle = 360;
+
+                    int x1 = 500;
+                    while (x1 > -500) {
+                        GamePanel.bullets.add(new Bullet(currentAngle, x + x1, y));
+                        x1 -= 100;
+                    }
+                }
+                else if (powerLevel < 2) {
                     GamePanel.bullets.add(new Bullet(currentAngle, x, y));
                 }
                 else if (powerLevel < 4) {
-                    GamePanel.bullets.add(new Bullet(currentAngle, x + 5, y));
-                    GamePanel.bullets.add(new Bullet(currentAngle, x - 5, y));
-                }
-                else {
-                    GamePanel.bullets.add(new Bullet(currentAngle, x, y));
+                    currentAngle = 45;
                     GamePanel.bullets.add(new Bullet(currentAngle, x + 15, y));
                     GamePanel.bullets.add(new Bullet(currentAngle, x - 15, y));
                 }
-
-                if(isShotgun) {
-                    minAngle = -45;
-                    for (int i = 0; i < bulletsAmount; i++) {
-                        GamePanel.bullets.add(new Bullet(currentAngle, x, y));
-                        currentAngle += density;
-                    }
-                    currentAngle = minAngle;
-                }
-                else{
-                    GamePanel.bullets.add(new Bullet(0, x, y));
+                else {
+                    currentAngle = 90;
+                    GamePanel.bullets.add(new Bullet(currentAngle, x, y));
+                    GamePanel.bullets.add(new Bullet(currentAngle, x + 55, y));
+                    GamePanel.bullets.add(new Bullet(currentAngle, x - 55, y));
                 }
             }
         }
@@ -174,19 +173,18 @@ public class Player {
     public void draw(Graphics2D g) {
         g.setColor(color1);
         g.fillOval((int) (x - r), (int) (y - r), 2 * r, 2 * r);
-        g.setStroke(new BasicStroke(3));  // line thickness
+        g.setStroke(new BasicStroke(3)); // line thickness
         g.setColor(color1.darker());
         g.drawOval((int) (x - r), (int) (y - r), 2 * r, 2 * r);
-        g.setStroke(new BasicStroke(1));  // line thickness
+        g.setStroke(new BasicStroke(1)); // line thickness
     }
-    
     public void drawHealth(Graphics2D g) {
         for (int i = 0; i < GamePanel.player.getHealth(); i++) {
             g.setColor(color1);
-            g.fillOval(15 + (25 * i), 20, GamePanel.player.getR() * 3, GamePanel.player.getR() * 3);
+            g.fillOval(15 + (25 * i), 20, GamePanel.player.getR() * 2, GamePanel.player.getR() * 2);
             g.setStroke(new BasicStroke(3));
             g.setColor(color1.darker());
-            g.fillOval(15 + (25 * i), 20, GamePanel.player.getR() * 3, GamePanel.player.getR() * 3);
+            g.fillOval(15 + (25 * i), 20, GamePanel.player.getR() * 2, GamePanel.player.getR() * 2);
             g.setStroke(new BasicStroke(1));
         }
     }

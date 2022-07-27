@@ -1,14 +1,11 @@
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class Menu {
 
-    // Fields
     private Color color1;
     private String s;
 
@@ -18,7 +15,6 @@ public class Menu {
 
     private String waveText;
 
-    // Constructor
     public Menu() {
         color1 = Color.white;
 
@@ -29,27 +25,24 @@ public class Menu {
 
     }
 
-    // Functions
     public void update() {
         if (GamePanel.leftMouse) {
             GamePanel.state = GamePanel.STATES.PLAY;
         }
     }
 
-
     public void draw(Graphics2D g) {
-
         // image background
         Image im = null;
         try {
             im = ImageIO.read(new File("image\\bubbleMenu.jpg"));
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
-        g.drawImage(im, 0, 0, 600,600, null);
+        g.drawImage(im, 0, 0, GamePanel.WIDTH, GamePanel.HEIGHT + 150, null);
 
         // flashing inscription
-        double divider = waveDelay / 180;
+        double divider = (double) waveDelay / 180;
         double alpha = waveTimerDiff / divider;
         alpha = 255 * Math.sin(Math.toRadians(alpha));
 
@@ -61,7 +54,7 @@ public class Menu {
 
         String s = waveText;
         long length = (int)g.getFontMetrics().getStringBounds(s, g).getWidth();
-        g.drawString(s, GamePanel.WIDTH / 2 - (int) (length / 2), GamePanel.HEIGHT - (length / 4));
+        g.drawString(s, GamePanel.WIDTH / 2f - (int) (length / 2), GamePanel.HEIGHT - (length / 4f));
 
         if (waveTimer == 0) {
             waveTimer = System.nanoTime();

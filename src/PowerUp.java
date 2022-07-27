@@ -1,8 +1,12 @@
 import java.awt.*;
 
+/**
+ * type #1 +1 life
+ * type #2 +1 power
+ * type #3 +2 power
+ */
 public class PowerUp {
-    
-    // Fields
+
     private double x;
     private double y;
     private int r;
@@ -10,14 +14,6 @@ public class PowerUp {
     private int type;
     private Color color1;
 
-    /**
-     * Constructor
-     
-     * Bonuses for each type of powerup:
-     * #1 type: +1 life
-     * #2 type: +1 powerup
-     * #3 type: +2 powerup
-     */
     public PowerUp(int type, double x, double y) {
         this.type = type;
         this.x = x;
@@ -37,21 +33,16 @@ public class PowerUp {
         }
     }
 
-    // Getters
     public double getX() { return x; }
     public double getY() { return y; }
     public double getR() { return r; }
+
     public int getType() { return type; }
-    
-    // Functions
+
     public boolean update() {
         y += 2;
-        if (y > GamePanel.HEIGHT + r) {
-            return true;
-        }
-        return false;
+        return y > GamePanel.HEIGHT + r;
     }
-    
     public void draw(Graphics2D g) {
         g.setColor(color1);
         g.fillRect((int) (x - r), (int) (y - r), 2 * r, 2 * r);

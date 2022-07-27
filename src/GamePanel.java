@@ -1,14 +1,12 @@
 import javax.swing.*;
-import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable{
 
-    // Fields
-    public static int WIDTH = 600;
-    public static int HEIGHT = 600;
+    public static int WIDTH = 1024;
+    public static int HEIGHT = 768;
 
     public static int mouseX;
     public static int mouseY;
@@ -45,19 +43,17 @@ public class GamePanel extends JPanel implements Runnable{
     public static GameOver gameover;
     public static Player health;
 
-    // Constructor
     public GamePanel() {
-        super();  // calling constructor of "JPanel" class
+        super();
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setFocusable(true);
-        requestFocus();  // activate focus
+        requestFocus(); // activate focus
 
         addKeyListener(new Listeners());
         addMouseMotionListener(new Listeners());
         addMouseListener(new Listeners());
     }
-    
     // Functions
     public void start() {
         thread = new Thread(this);
@@ -66,12 +62,12 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void run() {
         FPS = 30;
-        millisPerFrame = 1000 / FPS;
+        millisPerFrame = 1000.0 / FPS;
         sleepTime = 0;
 
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);  //improved graphics
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //improved graphics
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         leftMouse = false;
@@ -97,12 +93,10 @@ public class GamePanel extends JPanel implements Runnable{
         g3.drawLine(2, 0, 2, 4);
         g3.drawLine(0, 2, 4, 2);
         Cursor myCursor = kit.createCustomCursor(buffered, new Point(3, 3), "myCursor");
-        g3.dispose();
+        g3.dispose(); // del
 
         while (true) {
-
             this.setCursor(myCursor);
-
             timerFPS = System.nanoTime();
             if (state.equals(STATES.MENU)) {
                 background.update();
@@ -117,19 +111,19 @@ public class GamePanel extends JPanel implements Runnable{
                 gameDraw();
             }
             if (state.equals(STATES.GAMEOVER)) {
+                this.setCursor(Cursor.getDefaultCursor());
                 background.update();
                 background.draw(g);
                 gameover.draw(g);
                 gameDraw();
             }
 
-
             timerFPS = (System.nanoTime() - timerFPS) / 1000000;
             if (millisPerFrame > timerFPS) {
                 sleepTime = (int)(millisPerFrame - timerFPS);
             } else sleepTime = 1;
             try {
-                thread.sleep(sleepTime);  // current FPS
+                thread.sleep(sleepTime); // current game FPS
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -137,15 +131,15 @@ public class GamePanel extends JPanel implements Runnable{
             sleepTime = 1;
         }
     }
-    
-    /**
-     * A method that updates data of all objects
-     */
+    // updating data of all objects
     public void gameUpdate() {
+        // background upd
         background.update();
+
+        // player upd
         player.update();
 
-        // Bullets
+        // Bullets update
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).update();
             boolean remove = bullets.get(i).remove();
@@ -154,7 +148,7 @@ public class GamePanel extends JPanel implements Runnable{
                 i--;
             }
         }
-        // Enemies
+        // Enemies upd
         for (int i = 0; i < enemies.size(); i++) {
             enemies.get(i).update();
         }
@@ -164,7 +158,6 @@ public class GamePanel extends JPanel implements Runnable{
             Enemy e = enemies.get(i);
             double ex = e.getX();
             double ey = e.getY();
-            
             for (int j = 0; j < bullets.size(); j++) {
                 Bullet b = bullets.get(j);
                 double bx = b.getX();
@@ -172,7 +165,6 @@ public class GamePanel extends JPanel implements Runnable{
                 double dx = ex - bx;
                 double dy = ey - by;
                 double dist = Math.sqrt(dx * dx + dy * dy);
-                
                 if ((int) dist <= e.getR() + b.getR()) {
                     e.hit();
                     bullets.remove(j);
@@ -183,9 +175,9 @@ public class GamePanel extends JPanel implements Runnable{
                     if (remove) {
                         // chance for powerup
                         double rand = Math.random();
-                        if (rand < 0.001) powerUps.add(new PowerUp(1, e.getX(), e.getY()));
-                        else if (rand < 0.020) powerUps.add(new PowerUp(3, e.getX(), e.getY()));
+                        if (rand < 0.015) powerUps.add(new PowerUp(1, e.getX(), e.getY()));
                         else if (rand < 0.120) powerUps.add(new PowerUp(2, e.getX(), e.getY()));
+                        else if (rand < 0.020) powerUps.add(new PowerUp(3, e.getX(), e.getY()));
 
                         enemies.remove(i);
                         player.addScore(e.getType() + e.getRank());
@@ -196,8 +188,7 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
-        
-        // PowerUp
+        // PowerUp upd
         for (int i = 0; i < powerUps.size(); i++) {
             boolean remove = powerUps.get(i).update();
             if (remove) {
@@ -205,31 +196,26 @@ public class GamePanel extends JPanel implements Runnable{
                 i--;
             }
         }
-        
         // player-enemy collides
         for (int i = 0; i < enemies.size(); i++) {
             Enemy e = enemies.get(i);
-            double ex = e.getX();  // get coordinates
+            double ex = e.getX(); // get coordinates
             double ey = e.getY();
 
             double px = player.getX();
             double py = player.getY();
             double dx = ex - px;
             double dy = ey - py;
-            double dist = Math.sqrt(dx * dx + dy * dy);  // get distance
+            double dist = Math.sqrt(dx * dx + dy * dy); // get distance
             if ((int)dist <= e.getR() + player.getR()) {
                 e.hit();
                 player.hit();
 
-                boolean remove = e.remove();
-                if (remove) {
-                    enemies.remove(i);
-                    i--;
-                    return;
-                }
+                enemies.remove(i);
+                i--;
+                return;
             }
         }
-        
         // player-powerup collision
         double px = player.getX();
         double py = player.getY();
@@ -247,7 +233,7 @@ public class GamePanel extends JPanel implements Runnable{
             if (dist < pr + r) {
                 int type = p.getType();
 
-                if (type == 1) {
+                if (type == 1 && player.getHealth() < 3) {
                     player.gainLife();
                 }
                 if (type == 2) {
@@ -260,13 +246,11 @@ public class GamePanel extends JPanel implements Runnable{
                 powerUps.remove(i);
                 i --;
                 player.addScore(10);
-
             }
-
         }
         wave.update();
 
-        // Explosion
+        // Explosion update
         for (int i = 0; i < explosions.size(); i++) {
             boolean remove = explosions.get(i).update();
             if (remove) {
@@ -274,52 +258,47 @@ public class GamePanel extends JPanel implements Runnable{
                 i--;
             }
         }
-    }
-    
-    /**
-     * A method that redraws/updates GUI elements
-     */
-    public void gameRender() {
 
+    }
+    // updating graphic elements
+    public void gameRender() {
+        // background draw
         background.draw(g);
+
+        // player draw
         player.draw(g);
 
-        // bullets
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).draw(g);
+        // bullets draw
+        for (Bullet bullet : bullets) {
+            bullet.draw(g);
         }
-        
-        // enemies
-        for (int i = 0; i < enemies.size(); i++) {
-            enemies.get(i).draw(g);
+        // enemies draw
+        for (Enemy enemy : enemies) {
+            enemy.draw(g);
         }
-        
-        // powerups
-        for (int i = 0; i < powerUps.size(); i++) {
-            powerUps.get(i).draw(g);
+        // draw powerups
+        for (PowerUp powerUp : powerUps) {
+            powerUp.draw(g);
         }
-        
-        // wave
+        // wave draw
         if (wave.showWave()) {
             wave.draw(g);
         }
-        
-        // explosion
-        for (int i = 0; i < explosions.size(); i++) {
-            explosions.get(i).draw(g);
+        // explosion draw
+        for (Explosion explosion : explosions) {
+            explosion.draw(g);
         }
-        
-        // player lives
+        // draw player lives
         health.drawHealth(g);
 
-        // player score
+        //draw player score
         g.setColor(Color.WHITE);
         g.setFont(new Font("Consolas", Font.PLAIN, 25));
         g.drawString("Score " + player.getScore(), WIDTH - 140, 30);
 
-        // player power
+        // draw player power
         g.setColor(Color.YELLOW);
-        g.fillRect(17, 44, player.getPower() * 12, 12);
+        g.fillRect(17, 44, player.getPower() * 13, 12);
         g.setColor(Color.YELLOW.darker());
         g.setStroke(new BasicStroke(2));
         for (int i = 0; i < player.getRequiredPower(); i++) {
@@ -331,6 +310,6 @@ public class GamePanel extends JPanel implements Runnable{
     private void gameDraw() {
         Graphics g2 = this.getGraphics();
         g2.drawImage(image, 0, 0, null);
-        g2.dispose();  // cleaning
+        g2.dispose(); // cleaning
     }
 }

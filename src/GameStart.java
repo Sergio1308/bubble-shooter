@@ -12,6 +12,7 @@ public class GameStart {
         startFrame.pack();
         startFrame.setLocationRelativeTo(null); // set position
         startFrame.setVisible(true);
+        startFrame.setResizable(false);
         panel.start();
     }
 }

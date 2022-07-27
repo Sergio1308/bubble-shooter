@@ -1,14 +1,13 @@
 import java.awt.*;
 
 public class Enemy {
-    
-    // Fields
+
     private double x;
     private double y;
     private int r;
 
     private double speed;
-    private double dx;  // bias
+    private double dx;
     private double dy;
     private double rad;
 
@@ -22,57 +21,69 @@ public class Enemy {
 
     private Color color;
 
-    // Constructor
     public Enemy(int type, int rank) {
         this.type = type;
         this.rank = rank;
 
-        // Default enemy properties
-        if (type == 1) {
-            color = Color.GREEN;
-            if (rank == 1) {
-                speed = 2;
-                r = 7;
-                health = 1;
-            }
-        }
-        
-        // Stronger, faster + default properties
-        if (type == 2) {
-            color = Color.RED;
-            if (rank == 1) {
-                speed = 3;
-                r = 7;
-                health = 2;
-            }
-            
-            if (rank == 2) {
-                speed = 2;
-                r = 12;
-                health = 2;
-            }
-            
-            if (rank == 3) {
-                speed = 1.5;
-                r = 22;
-                health = 3;
-            }
-            
-            if (rank == 4) {
-                speed = 1.5;
-                r = 32;
-                health = 4;
-            }
-        }
-        
-        // Slow, but hard to kill
-        if (type == 3) {
-            color = Color.YELLOW;
-            if (rank == 1) {
-                speed = 1.5;
-                r = 7;
-                health = 5;
-            }
+        switch (type) {
+            // default enemy
+            case 1:
+                color = Color.GREEN;
+                if (rank == 1) {
+                    speed = 2;
+                    r = 7;
+                    health = 1;
+                }
+                break;
+            // stronger than default, ability to divide into smaller parts after killing
+            case 2:
+                color = Color.RED;
+                switch (rank) {
+                    case 1:
+                        speed = 3;
+                        r = 7;
+                        health = 2;
+                        break;
+                    case 2:
+                        speed = 2;
+                        r = 12;
+                        health = 2;
+                        break;
+                    case 3:
+                        speed = 1.5;
+                        r = 22;
+                        health = 3;
+                        break;
+                    case 4:
+                        speed = 1.5;
+                        r = 32;
+                        health = 4;
+                        break;
+                }
+                break;
+            // slow, but hard to kill
+            case 3:
+                color = Color.YELLOW;
+                if (rank == 1) {
+                    speed = 1.5;
+                    r = 7;
+                    health = 5;
+                }
+                break;
+            // fast and lively
+            case 4:
+                color = Color.PINK;
+                if (rank == 1) {
+                    speed = 5.5;
+                    r = 5;
+                    health = 2;
+                }
+                else if (rank == 2) {
+                    speed = 6;
+                    r = 7;
+                    health = 3;
+                }
+                break;
         }
 
         x = Math.random() * GamePanel.WIDTH;
@@ -84,7 +95,6 @@ public class Enemy {
         ready = false;
     }
 
-    // Functions
     public double getX() { return x; }
     public double getY() { return y; }
     public int getR() { return r; }
@@ -93,10 +103,7 @@ public class Enemy {
     public int getRank() { return rank; }
 
     public boolean remove() {
-        if (health <= 0) {
-            return true;
-        }
-        return false;
+        return health <= 0;
     }
 
     public void hit() { health--; }
@@ -126,7 +133,6 @@ public class Enemy {
     }
 
     public void update() {
-
         y += dy;
         x += dx;
 

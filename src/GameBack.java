@@ -4,18 +4,13 @@ import java.io.File;
 import java.io.IOException;
 
 public class GameBack {
-    // Fields
     private Color color;
 
-    // Constructor
     public GameBack() {
         color = Color.BLUE;
     }
 
-    // Functions
-    public void update() {
-
-    }
+    public void update() { }
     public void draw(Graphics2D g) {
         g.setColor(color);
         g.fillRect(0,0, GamePanel.WIDTH, GamePanel.HEIGHT);
@@ -23,9 +18,9 @@ public class GameBack {
         try {
             im = ImageIO.read(new File("image\\bubbleBack.jpg"));
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
-        g.drawImage(im, 0, 0, 600, 600, null);
+        g.drawImage(im, 0, 0, GamePanel.WIDTH, GamePanel.HEIGHT, null);
     }
 }
 
